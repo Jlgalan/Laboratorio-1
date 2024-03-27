@@ -1,0 +1,61 @@
+#.data se utiliza para almacenar datos del registro 
+# Se Asignan las variantes pera capturar los datos a comparar por medio de prompt
+# Por medio del output se almacena el numero mayor 
+.data
+prompt: .asciiz "Ingrese el número: "
+prompt1: .asciiz "Ingrese el número: "
+prompt2: .asciiz "Ingrese el número: "
+output:  .asciiz "El mayor es: "
+
+#.text son datos o codigos que pueden reutilizar varias veces
+
+.text
+main:
+# li $v0,4 es la instruccion para cargar una constante en una variable y el 4 quiere decir que es de tipo entero
+#li $v0, 5 es la funcion para leer un numero entero por consola
+#la $a0, se usa para almacenar un dato temporalmente y prompt para llamar el dato almacenado por el usuario
+#syscall es para obtener entrada, producir salida o salir de un proceso
+#Move realiza el intercambio de valores de v hacia t y lo almacena
+#ble hace la comparacion de los datos almacenados
+#check hace el salto a la siguiente funcion 
+    li $v0, 4         
+    la $a0, prompt   
+    syscall          
+    li $v0, 5        
+    syscall          
+    move $t0, $v0     
+# Se repite el proceso con el segundo dato almacenado
+    li $v0, 4         
+    la $a0, prompt1   
+    syscall           
+    li $v0, 5         
+    syscall           
+    move $t1, $v0     
+# repetir el proceso del tercer dato del usuario
+    li $v0, 4         
+    la $a0, prompt2   
+    syscall           
+    li $v0, 5         
+    syscall           
+    move $t2, $v0      
+# Comparar los números
+    move $t3, $t0     
+    blt $t1, $t3, check2  
+    move $t3, $t1     
+
+#se hace la comparacion con ble si el ultimo numero es mayor pasa a Print
+check2:
+    ble $t2, $t3, print   
+    move $t3, $t2     
+
+
+print:
+    # Muestra por consola 
+    li $v0, 4         
+    la $a0, output    
+    syscall           
+    move $a0, $t3     
+    li $v0, 1         
+    syscall           
+    li $v0, 10        
+    syscall           

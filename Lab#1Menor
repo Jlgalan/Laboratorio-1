@@ -1,0 +1,88 @@
+# .data se usa para declaración de variables de datos
+#men:.asciiz la utilizamos para solicitar a al usuario que ingrese los datos he imprime el mensaje del paso a seguir
+#numero1: .word la usamos para almacenar el numero en la variable numero y word para usar un espacio en memoria
+.data
+men1: .asciiz "Ingrese el número: " # mensaje para el primer número
+men2: .asciiz "Ingrese el número: " # mensaje para el segundo número
+men3: .asciiz "Ingrese el número: " # mensaje para el tercer número
+men4: .asciiz "\nEl menor es: "
+numero1: .word 0
+numero2: .word 0
+numero3: .word 0
+menor: .word 0
+
+# .text para programar del programa principal
+#
+.text
+main:
+    # Imprime el mensaje para ingresar el primer número y lo lee desde el teclado
+    # li $v0,4 es la instruccion para cargar una constante en una variable y el 4 quiere decir que es de tipo entero
+    #li $v0, 5 es la funcion para leer un numero entero por consola
+    #la $a0, mensaje1 carga la dirección del mensaje 1 en el registro $a0
+    #la $a0, se usa para almacenar un dato temporalmente y prompt para llamar el dato almacenado por el usuario
+    #syscall es para obtener entrada, producir salida o salir de un proceso
+    sw $v0, numero1 
+    li $v0, 4 
+    la $a0, men1 
+    syscall 
+    li $v0, 5 
+    syscall 
+    sw $v0, numero1 
+
+    # Imprime el mensaje para ingresar el segundo número y lo lee desde el teclado
+    # y se repite el proceso nuevamente
+    li $v0, 4 
+    la $a0, men2
+    syscall 
+    li $v0, 5 
+    syscall 
+    sw $v0, numero2 
+
+    # Imprime el mensaje para ingresar el tercer número y lo lee desde el teclado
+    # y se repite el proceso nuevamente
+    li $v0, 4 
+    la $a0, men3
+    syscall 
+    li $v0, 5 
+    syscall
+    sw $v0, numero3 
+
+    # Inicializa $t0 con el valor de numero1 como punto de partida
+    # se inicia la comparacion con la funcion check primero
+    # sw almacena el numero menor en la direcci?n de memoria menor 
+    lw $t0, numero1 
+    jal check_t1_t2
+    jal check_t1_t3
+    sw $t0, menor
+
+# Imprime el mensaje "El menor es: " y el número menor encontrado
+	li $v0, 4       
+	la $a0, men4    
+	syscall         
+	lw $a0, menor   
+	li $v0, 1       
+	syscall         
+# Cargar el valor 10 en $v0, que indica que la llamada al sistema es para terminar el programa
+#syscall llamar al sistema para terminar el programa
+	li $v0, 10      
+	syscall        
+
+
+# check comparar num1 y num2
+# Si numero1 es mayor que numero2, $t0 = numero2, de lo contrario $t0 = numero1
+#blt $t0, $t1, set_t0_t1 # Comparar $t0 con $t1. Si $t0 es menor o igual, saltar a set_t0_t1, de lo contrario continuar.
+# Si $t1 es menor, cargar $t1 en $t0
+#jr $ra devolver el control a la llamada anterior
+	check_t1_t2:
+	lw $t1, numero2   
+	blt $t0, $t1, set_t0_t1 
+	move $t0, $t1 
+	set_t0_t1:
+	jr $ra         
+
+# Repite el proceso anterior pero con el numero3 
+	check_t1_t3:
+	lw $t1, numero3   
+	blt $t0, $t1, set_t0_t1 
+	move $t0, $t1   
+	jr $ra         

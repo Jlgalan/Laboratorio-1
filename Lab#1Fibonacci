@@ -1,0 +1,52 @@
+# Programa de series de Fibonacci en lenguaje ensamblador MIPS
+# Este programa toma un número N como entrada del usuario y calcula los primeros N términos de la serie de Fibonacci
+# La serie se almacena en el array fibArr
+#fibArr:.space 100  reservar espacio para almacenar N términos de la serie
+#newline almacena los terminos por separado en \n
+.data
+    fibArr: .space 100     
+    newline:  .asciiz "\n"
+    prompt:  .asciiz "Ingrese el número de términos de la serie de Fibonacci: "
+    prompt2:  .asciiz " términos de la serie de Fibonacci:\n"
+
+.text
+# solicita entrada al usuario y la almacena en $a0
+    la   $a0, prompt
+    li   $v0, 4
+    syscall
+    li   $v0, 5
+    syscall
+# almacenar el número de términos con move de $v0 a $t0
+    move $t0, $v0  
+# imprimir el número con syscall
+    move $a0, $t0
+    li   $v0, 1
+    syscall
+# imprimir nueva línea
+    la   $a0, newline
+    li   $v0, 4
+    syscall
+# imprimir en palabras "términos de la serie de Fibonacci"
+    la   $a0, prompt2
+    li   $v0, 4
+    syscall
+# inicializamos los primeros 2 números de Fibonacci
+    li   $t1, 1    
+    li   $t2, 1
+# bucle para N términos
+    move $t3, $t0
+# imprimir la serie y con add va sumandocada termino almacenado
+    loop:
+    add $a0, $zero, $t1    
+    li   $v0, 1 
+    syscall
+# calcular el siguiente término sumando los dos terminos anteriores 
+    add $t4, $zero, $t1
+    add $t1, $t1, $t2
+    move $t2, $t4     
+# contador de actualizaciones con addi suma y con la terminacion i suma el termino inmediato
+    addi $t3, $t3, -1
+    bnez $t3, loop
+# Salir del programa
+    li   $v0, 10
+    syscall
