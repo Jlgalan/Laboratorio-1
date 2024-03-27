@@ -1,13 +1,12 @@
-# Programa de series de Fibonacci en lenguaje ensamblador MIPS
-# Este programa toma un número N como entrada del usuario y calcula los primeros N términos de la serie de Fibonacci
+# Este programa toma un nÃºmero N como entrada del usuario y calcula los primeros N tÃ©rminos de la serie de Fibonacci
 # La serie se almacena en el array fibArr
-#fibArr:.space 100  reservar espacio para almacenar N términos de la serie
+#fibArr:.space 100  reservar espacio para almacenar N tÃ©rminos de la serie
 #newline almacena los terminos por separado en \n
 .data
     fibArr: .space 100     
     newline:  .asciiz "\n"
-    prompt:  .asciiz "Ingrese el número de términos de la serie de Fibonacci: "
-    prompt2:  .asciiz " términos de la serie de Fibonacci:\n"
+    prompt:  .asciiz "Ingrese el nÃºmero de tÃ©rminos de la serie de Fibonacci: "
+    prompt2:  .asciiz " tÃ©rminos de la serie de Fibonacci:\n"
 
 .text
 # solicita entrada al usuario y la almacena en $a0
@@ -16,31 +15,31 @@
     syscall
     li   $v0, 5
     syscall
-# almacenar el número de términos con move de $v0 a $t0
+# almacenar el nÃºmero de tÃ©rminos con move de $v0 a $t0
     move $t0, $v0  
-# imprimir el número con syscall
+# imprimir el nÃºmero con syscall
     move $a0, $t0
     li   $v0, 1
     syscall
-# imprimir nueva línea
+# imprimir nueva lÃ­nea
     la   $a0, newline
     li   $v0, 4
     syscall
-# imprimir en palabras "términos de la serie de Fibonacci"
+# imprimir en palabras "tÃ©rminos de la serie de Fibonacci"
     la   $a0, prompt2
     li   $v0, 4
     syscall
-# inicializamos los primeros 2 números de Fibonacci
+# inicializamos los primeros 2 nÃºmeros de Fibonacci
     li   $t1, 1    
     li   $t2, 1
-# bucle para N términos
+# bucle para N tÃ©rminos
     move $t3, $t0
 # imprimir la serie y con add va sumandocada termino almacenado
     loop:
     add $a0, $zero, $t1    
     li   $v0, 1 
     syscall
-# calcular el siguiente término sumando los dos terminos anteriores 
+# calcular el siguiente tÃ©rmino sumando los dos terminos anteriores 
     add $t4, $zero, $t1
     add $t1, $t1, $t2
     move $t2, $t4     
